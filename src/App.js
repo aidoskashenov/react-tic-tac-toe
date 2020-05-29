@@ -3,15 +3,51 @@ import "./App.css";
 
 import { Square } from "./components";
 
+import { createRange } from "./utils";
+
+const createSquares = () =>
+  createRange(9).reduce(
+    (accumulator, currentNum) => ({
+      ...accumulator,
+      // Each numbered square will start with a numerical value.
+      // This will get changed to either an 'X' or 'O' upon clicking
+      ...{ [currentNum]: currentNum },
+    }),
+    {}
+  );
+
 export class App extends React.Component {
-  render() {
+  state = {
+    squares: null,
+  };
+
+  updateSquare = () => {
+    console.log(this, "square was clicked");
+  };
+
+  renderRow(seqOf3) {
+    return seqOf3.map((num) => {
+      return <Square val={num} key={num} handleClick={this.updateSquare} />;
+    });
+  }
+
+  renderSquares() {
     return (
-      <div>
-        <div className="status"></div>
-        <div className="board-row"></div>
-        <div className="board-row"></div>
-        <div className="board-row"></div>
-      </div>
+      Object.keys(createSquares())
+        // [0, 3, 6]
+        .filter((key) => !(key % 3))
+        .map((key) => {
+          return (
+            <div className="board-row" key={key}>
+              {/* Create a row by using an Array of 3 elements, we offset using our keys - 0, 3, 6 */}
+              {this.renderRow(createRange(3, Number.parseInt(key)))}
+            </div>
+          );
+        })
     );
+  }
+
+  render() {
+    return this.renderSquares();
   }
 }
