@@ -3,13 +3,17 @@ import React from "react";
 
 export class Square extends React.Component {
   static propTypes = {
-    handleClick: PropType.func.isRequired,
+    updateSquare: PropType.func.isRequired,
     val: PropType.string,
+  };
+
+  handleClick = () => {
+    this.props.updateSquare(this.props.val);
   };
 
   render() {
     return (
-      <button className="square" onClick={this.props.handleClick}>
+      <button className="square" onClick={this.handleClick}>
         {this.props.val}
       </button>
     );

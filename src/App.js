@@ -18,33 +18,48 @@ const createSquares = () =>
 
 export class App extends React.Component {
   state = {
-    squares: null,
+    squares: createSquares(),
+    turn: "X",
   };
 
-  updateSquare = () => {
-    console.log(this, "square was clicked");
+  toggleTurn = () => {
+    if (this.state.turn === "X") {
+      return "O";
+    }
+    return "X";
+  };
+
+  updateSquare = (clickedSq) => {
+    const squares = { ...this.state.squares };
+    squares[clickedSq] = this.state.turn;
+    this.setState({ squares, turn: this.toggleTurn() });
   };
 
   renderRow(seqOf3) {
     return seqOf3.map((num) => {
-      return <Square val={num} key={num} handleClick={this.updateSquare} />;
+      return (
+        <Square
+          // We don't want to just use the 'num'
+          // We want the actual value of the square
+          val={this.state.squares[num].toString()}
+          key={num}
+          updateSquare={this.updateSquare}
+        />
+      );
     });
   }
 
   renderSquares() {
-    return (
-      Object.keys(createSquares())
-        // [0, 3, 6]
-        .filter((key) => !(key % 3))
-        .map((key) => {
-          return (
-            <div className="board-row" key={key}>
-              {/* Create a row by using an Array of 3 elements, we offset using our keys - 0, 3, 6 */}
-              {this.renderRow(createRange(3, Number.parseInt(key)))}
-            </div>
-          );
-        })
-    );
+    return Object.keys(this.state.squares)
+      .filter((key) => !(key % 3))
+      .map((key) => {
+        return (
+          <div className="board-row" key={key}>
+            {/* Create a row by using an Array of 3 elements, we offset using our keys - 0, 3, 6 */}
+            {this.renderRow(createRange(3, Number.parseInt(key)))}
+          </div>
+        );
+      });
   }
 
   render() {
