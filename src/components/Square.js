@@ -8,7 +8,10 @@ export class Square extends React.Component {
   };
 
   handleClick = () => {
-    this.props.updateSquare(this.props.val);
+    // IF IT'S === "X" || "O
+    if (!Number.isNaN(Number.parseInt(this.props.val))) {
+      this.props.updateSquare(this.props.val);
+    }
   };
 
   render() {
